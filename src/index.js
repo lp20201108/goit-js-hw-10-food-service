@@ -1,48 +1,52 @@
+import menuData from './dataBases/menu.json';
+import menuTemplate from "./templates/menu_card.hbs";
+import './css/style.css';
 
-import style from './css/style.css';
-import PNotify from '../node_modules/pnotify/dist/es/PNotify.js';
-import PNotifyStyleMaterial from 'pnotify/dist/es/PNotifyStyleMaterial.js';
-import PNotifyButtons from '../node_modules/pnotify/dist/es/PNotifyButtons.js';
+// console.log(menuData);
 
-PNotify.defaults.styling = 'material';
-PNotify.defaults.icons = 'material';
+const markupMenu= menuTemplate(menuData);
 
-
-console.log(PNotify.defaults)
-
-
-
-PNotify.alert('Notice me, senpai!');
-PNotify.notice({
-    title: 'Desktop Notice',
-    text: 'I\'ll appear as a desktop notification. Unless I can\'t. I\'ll still appear as a regular PNotify notice then.'
-  });
+document
+  .querySelector(".js-menu")
+  .insertAdjacentHTML("beforeend", markupMenu);
+ 
+  
+const Theme = {
+    LIGHT: 'light-theme',
+    DARK: 'dark-theme',
+};
 
 
-// let inp = document.querySelector('input');
-// inp.addEventListener('change', (e)=> {
-
-
-//     e.target.value.length > 3 
-//     ? fetch(`https://pokeapi.co/api/v2/pokemon/${e.target.value}`)
-//     .then(data=> data.json())
-//     .then(({name, abilities, sprites})=> 
-//     {
-//         document.body.insertAdjacentHTML('afterbegin',
-//     `<div class="wrapper">
-//     <h2>${name}</h2>
-//     <img src=${sprites.front_default}>
-//     <ul class="abilities"></ul>
-//     </div>`)
-//     abilities.forEach(({ability})=> {
-//         document.querySelector(".abilities").innerHTML += `<li>${ability.name}</li>`
-//     })
-
-// }) 
-//     : ''
-
-// })
+// Если при загрузке страницы тема тёмная, не забудь поставить свойство checked у чекбокса
+//  #theme -switch-toggle в true, чтобы ползунок сдвинулся в правильное положение.
 
 
 
+function handleDefaultTheme() {
+    document.body.classList.add(Theme.LIGHT);
+};
 
+let checkBox = document.querySelector('.theme-switch__toggle');
+console.log(checkBox);
+checkBox.addEventListener('change', changeTheme);
+
+function changeTheme(event) {
+    if (checkBox.checked) {
+        document.body.classList.add(Theme.DARK);
+        localStorage.setItem('theme', 'dark-theme');
+    } else {
+        document.body.classList.remove(Theme.DARK);
+        document.body.classList.add(Theme.LIGHT);
+       localStorage.setItem('theme','light-theme');
+    }
+};
+
+
+let savedTheme = localStorage.getItem('theme');
+
+if (savedTheme === 'dark-theme') {
+    checkBox.checked = true;
+    document.body.classList.add(Theme.DARK);
+} else {
+      document.body.classList.add(Theme.LIGHT);
+};
